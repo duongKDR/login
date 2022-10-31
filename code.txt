@@ -6,7 +6,10 @@ app.parse
 app.connect
 
 .env
-
+ lít ds //admin
+ quản lí user có quyet dong ý user check cooker 
+ thêm kí tư
+ 
 userRouter.js
 app.router
 

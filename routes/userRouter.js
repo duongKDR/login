@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
         }
 
         console.log(req.body);
-        res.send("recieved your request!");
+
         let registerRequestModel = new userModel({
             username: req.body.username,
             password: hashPassword,
@@ -42,8 +42,8 @@ router.post('/register', async (req, res) => {
 
         })
         let result = await registerRequestModel.save()
-        res.json(result)
-
+        // res.json(result)
+        return res.send("Đăng kí thành công!");
     } catch (error) {
         res.status(500).send(error.message)
     }
@@ -95,13 +95,14 @@ router.post('/login', async (req, res) => {
         )
         console.log(user.role);
         if (user.role == "admin") {
-            return res.status(200).send("trang cho admin").redirect("/abc")
+            return res.status(200).send("trang cho admin").redirect("/1")
         }
         return res.json({
             msg: 'Đăng nhập thành công.',
 
             accessToken, refreshToken,
         });
+        
     } catch (error) {
         res.status(500).send(error.message)
     }
