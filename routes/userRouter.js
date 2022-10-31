@@ -33,6 +33,8 @@ router.post('/register', async (req, res) => {
             return res.json(500).message("Role is not found.");
         }
 
+        console.log(req.body);
+        res.send("recieved your request!");
         let registerRequestModel = new userModel({
             username: req.body.username,
             password: hashPassword,
@@ -41,8 +43,7 @@ router.post('/register', async (req, res) => {
         })
         let result = await registerRequestModel.save()
         res.json(result)
-        console.log(req.body);
-        res.send("recieved your request!");
+
     } catch (error) {
         res.status(500).send(error.message)
     }
