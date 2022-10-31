@@ -1,0 +1,16 @@
+npm init -y
+npm i bcrypt cors dotenv express jsonwebtoken mongoose colors
+server.js 
+app.mvc 
+app.parse
+app.connect
+
+.env
+
+userRouter.js
+app.router
+
+useModel.js
+msch
+tao ket noi 
+npm install --save body-parser multer
