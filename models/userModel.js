@@ -5,8 +5,7 @@ const userModelSchema = new mongoose.Schema({
   password: { type: String, require: true,  },
 
 
-    // token: { type: String, required: true },
-
+    // token: { type: String, required: true }
 
   refreshToken: { type: String },
   role: { type: String, default: "user" },

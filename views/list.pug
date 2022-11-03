@@ -12,13 +12,14 @@
         th CreatedAt
     each a in users
       tr 
+        th #{a.id}
         th #{a.username}
         th ||
         th #{a.role } 
         th ||
         th #{a.createdAt}
         th
-          <form action="/:username" method="post">
+          <form action="/:id" method="post">
            <button type='submit' class="btn btn-lg">Delete</button>
           </form>      
 

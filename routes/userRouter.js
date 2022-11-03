@@ -7,7 +7,19 @@ const { role, ROLES } = require('../models/index');
 var refreshTokens = {};
 const CheckToken = require("../middlewares/checkToken")
 
-
+router.delete('/deleteUser').deleteUser = async (req, res, next) => {
+  const { id } = req.body
+  await userModel.findOne({ id })
+      .then(userModel => userModel.remove())
+      .then(userModel =>
+        res.status(201).json({ message: "userModel successfully deleted", userModel })
+      )
+      .catch(error =>
+        res
+          .status(400)
+          .json({ message: "An error occurred", error: error.message })
+      )
+  }
 
 router.get('/register', function (req, res) {
     res.render('register');
@@ -108,12 +120,6 @@ router.post('/login', async (req, res) => {
 
             })
 
-            // sai
-            // const { username } = req.body
-            // const user = userModel.findOne({ username })
-            // user.deleteOne({username})
-            // console.log(username);
-
 
 
             return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).render('list')
@@ -133,8 +139,11 @@ router.post('/login', async (req, res) => {
 })
 
 
-const authAdmin = require("../middlewares/authenticateToken")
-router.get('/1', CheckToken, function (req, res) {
+
+const authAdmin = require("../middlewares/checkAdmin")
+
+const userAuth = require("../middlewares/checkUser")
+router.get('/1', CheckToken,authAdmin,userAuth, function (req, res) {
     res.json(req.headers)
 })
 
@@ -145,5 +154,13 @@ router.get('/1', CheckToken, function (req, res) {
 
 //     })
 // })
+// router.post(':username', (req, res) => {
 
+
+//     const { username } = req.body
+//     const user = userModel.findOne({ username })
+//     user.deleteOne({username})
+//     console.log(username);
+//     return res.redirect('/')
+// });
 module.exports = router
