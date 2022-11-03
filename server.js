@@ -3,29 +3,33 @@ const app = express()
 const path = require('path');
 require('dotenv').config()
 const port = process.env.PORT || 3000
+var indexRouter = require("./routes/index");
+var logger = require("morgan");
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var multer = require('multer');
+var upload = multer();
 const userRouter = require("./routes/userRouter")
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(userRouter)
-var indexRouter = require("./routes/index");
+app.use(cookieParser());
 // HTTP logger
 
-
+// check cookie
 
 // Template engine
-app.set('view engine', 'pug');
-app.set('views', './views');
 
-var logger = require("morgan");
+
 app.get('/register', function (req, res) {
   res.render('register');
 })
 //
 
-var bodyParser = require('body-parser');
-var multer = require('multer');
-var upload = multer();
 
+// view engine setup
+app.set("views", path.join(__dirname, "./views"));
+app.set("view engine", "ejs")
 
 app.set('view engine', 'pug');
 app.set('views', './views');

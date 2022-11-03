@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const { db } = require('../models/userModel');
 const { role, ROLES } = require('../models/index');
 var refreshTokens = {};
-
+const CheckToken = require("../middlewares/checkToken")
 
 
 
@@ -13,6 +13,9 @@ router.get('/register', function (req, res) {
     res.render('register');
 })
 
+router.get('/login', function (req, res) {
+    res.render('login');
+})
 
 router.post('/register', async (req, res) => {
     try {
@@ -23,7 +26,9 @@ router.post('/register', async (req, res) => {
         const { username, password } = req.body
         const user = await userModel.findOne({ username })
         if (user) return res.status(400).json({ msg: " Username da tồn tại" })
-
+        if (password.match(/^(?=.{5,})(?=.*[a-z]+)(?=.*\d+)(?=.*[A-Z]+)(?=.*[^\w])[ -~]+$/)) {
+            res.json("match!");
+        }
 
         const hashPassword = bcrypt.hashSync(req.body.password, 10);
 
@@ -94,28 +99,51 @@ router.post('/login', async (req, res) => {
 
         )
         console.log(user.role);
+        console.log(user.username);
+        console.log(user.createdAt);
         if (user.role == "admin") {
-            return res.status(200).send("trang cho admin").redirect("/1")
+            const users = await userModel.find();
+            res.render('list', {
+                users,
+
+            })
+
+            // sai
+            // const { username } = req.body
+            // const user = userModel.findOne({ username })
+            // user.deleteOne({username})
+            // console.log(username);
+
+
+
+            return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).render('list')
+
         }
-        return res.json({
+        return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).json({
             msg: 'Đăng nhập thành công.',
 
             accessToken, refreshToken,
-        });
-        
+        }
+            // .clearCookie('username')
+        );
+
     } catch (error) {
         res.status(500).send(error.message)
     }
 })
 
 
-
-router.get('/1', (req, res) => {
-    const key = require('crypto').randomBytes(12).toString('hex')
-    console.log("key", key);
-    return res.status(200).json(key);
+const authAdmin = require("../middlewares/authenticateToken")
+router.get('/1', CheckToken, function (req, res) {
+    res.json(req.headers)
 })
 
+// router.post('/list', async function (req, res) {
+//     const users = await userModel.find();
+//     res.render('list', {
+//         users
 
+//     })
+// })
 
 module.exports = router

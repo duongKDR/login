@@ -1,0 +1,28 @@
+<html lang="en">
+
+<body>
+
+  <div class="container col-8">
+    <table class="table table-bordered">
+      tr
+        th Tên
+        th |
+        th Role
+        th |
+        th CreatedAt
+    each a in users
+      tr 
+        th #{a.username}
+        th ||
+        th #{a.role } 
+        th ||
+        th #{a.createdAt}
+        th
+          <form action="/:username" method="post">
+           <button type='submit' class="btn btn-lg">Delete</button>
+          </form>      
+
+
+
+
+
