@@ -7,20 +7,16 @@ const { role, ROLES } = require('../models/index');
 var refreshTokens = {};
 const CheckToken = require("../middlewares/checkToken")
 
-router.delete('/deleteUser').deleteUser = async (req, res, next) => {
-  const { id } = req.body
-  await userModel.findOne({ id })
-      .then(userModel => userModel.remove())
-      .then(userModel =>
-        res.status(201).json({ message: "userModel successfully deleted", userModel })
-      )
-      .catch(error =>
-        res
-          .status(400)
-          .json({ message: "An error occurred", error: error.message })
-      )
-  }
 
+router.delete('/:id', async function (req, res) {
+    const { id } = req.params;
+    if(!id){
+      return res.status(400).json({ message: "Not id" })
+    }
+    await userModel.findByIdAndDelete(id)
+    res.status(200).render('list')
+  
+})
 router.get('/register', function (req, res) {
     res.render('register');
 })
@@ -38,8 +34,9 @@ router.post('/register', async (req, res) => {
         const { username, password } = req.body
         const user = await userModel.findOne({ username })
         if (user) return res.status(400).json({ msg: " Username da tồn tại" })
-        if (password.match(/^(?=.{5,})(?=.*[a-z]+)(?=.*\d+)(?=.*[A-Z]+)(?=.*[^\w])[ -~]+$/)) {
-            res.json("match!");
+        const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*\W)(?!.* ).{8,16}$/;
+        if (password= regex.exec(password)) {
+          return res.json("định dạng lại");
         }
 
         const hashPassword = bcrypt.hashSync(req.body.password, 10);
@@ -142,25 +139,12 @@ router.post('/login', async (req, res) => {
 
 const authAdmin = require("../middlewares/checkAdmin")
 
-const userAuth = require("../middlewares/checkUser")
+const userAuth = require("../middlewares/checkUser");
+const { text } = require('body-parser');
 router.get('/1', CheckToken,authAdmin,userAuth, function (req, res) {
     res.json(req.headers)
 })
 
 // router.post('/list', async function (req, res) {
-//     const users = await userModel.find();
-//     res.render('list', {
-//         users
 
-//     })
-// })
-// router.post(':username', (req, res) => {
-
-
-//     const { username } = req.body
-//     const user = userModel.findOne({ username })
-//     user.deleteOne({username})
-//     console.log(username);
-//     return res.redirect('/')
-// });
 module.exports = router
