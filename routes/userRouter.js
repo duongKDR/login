@@ -123,18 +123,18 @@ router.post('/login', async (req, res) => {
             const users = await userModel.find();
             res.render('list', {
                 users,
-            })
+            }).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) });
             console.log("-----------------");
             // res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) });
             res.end();
 
         }
-        // return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).json({
-        //     msg: 'Đăng nhập thành công.',
+        return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).json({
+            msg: 'Đăng nhập thành công.',
 
-        //     accessToken, refreshToken,
-        // });
-            // .clearCookie('username')
+            accessToken, refreshToken,
+        });
+        //    .clearCookie('username')
 
 
     } catch (error) {
