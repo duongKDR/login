@@ -1,25 +1,21 @@
 <html lang="en">
-
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 <body>
 
   <div class="container col-8">
     <table class="table table-bordered">
       tr
-        th ID
-        th |
-        th Tên
-        th |
-        th Role
-        th |
-        th CreatedAt
+        <th scope="col"> ID
+        <th scope="col"> Tên
+        <th scope="col"> Role
+        <th scope="col"> CreatedAt
     each a in users
       tr 
         th #{a.id}
-        th ||
         th #{a.username}
-        th ||
         th #{a.role } 
-        th ||
+
         th #{a.createdAt}
         th
           form(action = `/${a.id}`, method = "POST")

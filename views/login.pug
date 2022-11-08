@@ -1,15 +1,17 @@
+
 html
-html
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
    head
-      title Form Tester
+      title DANGNHAP
    body
       form(action = "/login", method = "POST")
-         div
-            label(for = "username") Name:
-            input(name = "username" value = "Hi")
+         <div class="form-group col-5 col-form-label" style ="margin-left:50px;">
+            label(for = "username") Username:
+            input(name = "username" class="form-control")
          br
-         div
-            label(for = "password") Pass:
-            input(name = "password" value = "Express forms")
+         <div class="form-group">
+            label(for = "password") Password:
+            input(name = "password"  class="form-control")
          br
-         button(type = "submit" ) ĐĂNG NHẬP
+         button(type = "submit" class="btn btn-primary my-1") ĐĂNG NHẬP

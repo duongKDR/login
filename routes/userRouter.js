@@ -10,19 +10,24 @@ const CheckToken = require("../middlewares/checkToken")
 
 router.delete('/:id', async function (req, res) {
     const { id } = req.params;
+    console.log( id);
+        // for (let index = 0; index < id.length; index++) {
+        //     const element = id[index];
+            
+        // }
     if(!id){
       return res.status(400).json({ message: "Not id" })
     }
     await userModel.findByIdAndDelete(id)
-    res.status(200).render('list')
+   return res.status(200).render('list')
   
 })
 router.get('/register', function (req, res) {
     res.render('register');
 })
 
-router.get('/login', function (req, res) {
-    res.render('login');
+router.get('/login', function (req, res, next) {
+ res.render('login');
 })
 
 router.post('/register', async (req, res) => {
@@ -34,11 +39,15 @@ router.post('/register', async (req, res) => {
         const { username, password } = req.body
         const user = await userModel.findOne({ username })
         if (user) return res.status(400).json({ msg: " Username da tồn tại" })
-        const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*\W)(?!.* ).{8,16}$/;
-        if (password= regex.exec(password)) {
-          return res.json("định dạng lại");
-        }
-
+   
+        if (password.match(/^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/)) {
+               res.json("định dạng lại");
+           } 
+        // const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*\W)(?!.* ).{8,16}$/;
+        // if (password= regex.exec(password)) {
+        //   return res.json("định dạng lại");
+        // }
+        // ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
         const hashPassword = bcrypt.hashSync(req.body.password, 10);
 
         let isvalid = ROLES.indexOf(req.body.role);
@@ -114,24 +123,23 @@ router.post('/login', async (req, res) => {
             const users = await userModel.find();
             res.render('list', {
                 users,
-
             })
-
-
-
-            return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).render('list')
+            console.log("-----------------");
+            // res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) });
+            res.end();
 
         }
-        return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).json({
-            msg: 'Đăng nhập thành công.',
+        // return res.status(200).cookie("token", accessToken, { expire: new Date(3600 + Date.now()) }).json({
+        //     msg: 'Đăng nhập thành công.',
 
-            accessToken, refreshToken,
-        }
+        //     accessToken, refreshToken,
+        // });
             // .clearCookie('username')
-        );
+
 
     } catch (error) {
-        res.status(500).send(error.message)
+        console.log(error);
+        // res.status(500).send(error.message)
     }
 })
 
